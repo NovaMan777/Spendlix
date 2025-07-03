@@ -5,7 +5,7 @@ const InfoCard = ({
   label, 
   value, 
   color = "bg-indigo-500",
-  currency = "$",
+  currency = "₹", 
   loading = false,
   trend = null, // 'up', 'down', or null
   trendValue = null,

@@ -33,7 +33,7 @@ const CustomBarChart = ({ data }) => {
           <p className="text-sm text-gray-600 font-medium">
             Amount:{" "}
             <span className="text-sm font-bold text-indigo-600">
-              ${payload[0].payload.amount.toLocaleString()}
+              ₹{payload[0].payload.amount.toLocaleString()}
             </span>
           </p>
         </div>
@@ -98,7 +98,7 @@ const CustomBarChart = ({ data }) => {
               tick={{ fontSize: 12, fill: "#64748b" }}
               axisLine={{ stroke: "#cbd5e1" }}
               tickLine={false}
-              tickFormatter={(value) => `$${value.toLocaleString()}`}
+              tickFormatter={(value) => `₹${value.toLocaleString()}`}
             />
 
             <Tooltip
