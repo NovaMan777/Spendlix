@@ -5,33 +5,50 @@ import axiosInstance from "../../utils/axiosInstance";
 import { API_PATHS } from "../../utils/apiPaths";
 import { UserContext } from "../../context/userContext";
 import {
-  FaGithub, FaLinkedin, FaUserShield, FaEnvelope, FaLock
+  FaGem, FaUserTie, FaFingerprint, FaShieldAlt, FaRocket,
+  FaChartLine, FaLock, FaEnvelope, FaChevronRight
 } from "react-icons/fa";
-import { FiZap, FiShield, FiLogIn } from "react-icons/fi";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
+import Particles from "react-tsparticles";
+import { loadFull } from "tsparticles";
 
-const iconCards = [
+const premiumFeatures = [
   {
-    icon: <FiShield className="h-6 w-6 text-white" />,
-    title: "Enterprise Security",
-    desc: "256-bit encryption for your data",
-    delay: 0.6,
+    icon: <FaShieldAlt className="text-blue-400" size={20} />,
+    title: "Military-Grade Security",
+    description: "AES-256 encryption with zero-knowledge protocol"
   },
   {
-    icon: <FiZap className="h-6 w-6 text-white" />,
-    title: "Lightning Fast",
-    desc: "Optimized for maximum performance",
-    delay: 0.8,
+    icon: <FaRocket className="text-purple-400" size={20} />,
+    title: "Ultra-Fast Performance",
+    description: "Global CDN with edge computing"
   },
+  {
+    icon: <FaChartLine className="text-green-400" size={20} />,
+    title: "Advanced Analytics",
+    description: "Real-time insights and reporting"
+  },
+  {
+    icon: <FaFingerprint className="text-yellow-400" size={20} />,
+    title: "Biometric Authentication",
+    description: "Facial recognition & fingerprint login"
+  }
 ];
 
-const InputField = ({ id, label, type, value, onChange, icon, placeholder, autoComplete, link }) => (
-  <motion.div initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: type === "password" ? 0.5 : 0.4 }}>
-    <div className="flex justify-between items-center mb-1">
-      <label htmlFor={id} className="block text-sm font-medium text-gray-700">{label}</label>
-      {link && <Link to={link.href} className="text-sm text-blue-600 hover:text-blue-500">{link.text}</Link>}
-    </div>
+const InputField = ({ id, label, type, value, onChange, icon, placeholder }) => (
+  <motion.div
+    initial={{ opacity: 0, y: 10 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ type: "spring", stiffness: 300 }}
+    className="mb-6"
+  >
+    <label htmlFor={id} className="block text-sm font-medium text-gray-700 mb-2">
+      {label}
+    </label>
     <div className="relative">
+      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+        {icon}
+      </div>
       <input
         id={id}
         type={type}
@@ -39,12 +56,8 @@ const InputField = ({ id, label, type, value, onChange, icon, placeholder, autoC
         onChange={onChange}
         required
         placeholder={placeholder}
-        autoComplete={autoComplete}
-        className="block w-full px-5 py-4 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="block w-full pl-10 pr-3 py-4 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
       />
-      <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-        {icon}
-      </div>
     </div>
   </motion.div>
 );
@@ -55,9 +68,14 @@ const Login = () => {
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
+  const [showFeatures, setShowFeatures] = useState(false);
 
   const { updateUser } = useContext(UserContext);
   const navigate = useNavigate();
+
+  const particlesInit = async (engine) => {
+    await loadFull(engine);
+  };
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -70,7 +88,7 @@ const Login = () => {
     }
 
     if (!password) {
-      setError("Please enter the password");
+      setError("Please enter your password");
       setIsLoading(false);
       return;
     }
@@ -85,64 +103,181 @@ const Login = () => {
         navigate("/dashboard");
       }
     } catch (err) {
-      setError(err.response?.data.message || "Something went wrong. Please try again.");
+      setError(err.response?.data.message || "Authentication failed. Please try again.");
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex bg-gradient-to-br from-gray-50 to-gray-100">
+    <div className="min-h-screen flex bg-gradient-to-br from-gray-900 to-gray-800 overflow-hidden">
+      {/* Animated Background */}
+      <div className="absolute inset-0 z-0">
+        <Particles
+          id="tsparticles"
+          init={particlesInit}
+          options={{
+            fullScreen: { enable: false },
+            particles: {
+              number: { value: 30, density: { enable: true, value_area: 800 } },
+              color: { value: "#3B82F6" },
+              shape: { type: "circle" },
+              opacity: { value: 0.5, random: true },
+              size: { value: 3, random: true },
+              line_linked: { enable: true, distance: 150, color: "#3B82F6", opacity: 0.4, width: 1 },
+              move: { enable: true, speed: 2, direction: "none", random: true, straight: false, out_mode: "out" }
+            },
+            interactivity: {
+              events: { onhover: { enable: true, mode: "grab" } }
+            }
+          }}
+        />
+      </div>
+
       {/* Left Panel */}
-      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8 }}
-        className="hidden lg:flex w-1/2 bg-gradient-to-br from-blue-900 to-indigo-900 p-12 flex-col justify-between relative overflow-hidden">
-        {[20, -20, 20].map((x, i) => (
-          <motion.div
-            key={i}
-            animate={{ x: [0, x, 0], y: [0, 20, 0], rotate: [0, x > 0 ? 360 : -360] }}
-            transition={{ duration: 15 + i * 5, repeat: Infinity, ease: "linear" }}
-            className={`absolute ${i === 0 ? 'top-1/4 left-1/4 w-64' : i === 1 ? 'top-1/3 right-1/4 w-48' : 'bottom-1/4 right-1/3 w-56'} h-56 rounded-full bg-white/10 mix-blend-overlay filter blur-3xl`}
-          />
-        ))}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.8 }}
+        className="hidden lg:flex w-1/2 bg-gradient-to-br from-blue-900/90 to-indigo-900/90 p-12 flex-col justify-between relative overflow-hidden"
+      >
+        <div className="absolute inset-0 bg-gradient-to-b from-blue-500/10 to-transparent opacity-20"></div>
+
         <div className="relative z-10 text-white">
-          <motion.h1 initial={{ y: -20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.2 }}
-            className="text-5xl font-bold mb-4">Welcome Back</motion.h1>
-          <motion.p initial={{ y: -20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.4 }}
-            className="text-blue-200 text-xl">Your premium workspace awaits</motion.p>
+          <motion.div
+            initial={{ y: -20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.2 }}
+            className="flex items-center mb-2"
+          >
+            <FaGem className="text-blue-300 mr-2" size={24} />
+            <span className="text-blue-300 font-medium">LOG IN PAGE</span>
+          </motion.div>
+          <motion.h1
+            initial={{ y: -20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.3 }}
+            className="text-5xl font-bold mb-4 leading-tight"
+          >
+            Welcome to <br />Your <span className="text-blue-300">SpenDix</span> Platform
+          </motion.h1>
+          <motion.p
+            initial={{ y: -20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.4 }}
+            className="text-blue-200 text-xl max-w-lg"
+          >
+            Access your personalized dashboard with primium ui feature and mannage your all expenses.
+          </motion.p>
         </div>
-        <div className="relative z-10 space-y-6">
-          {iconCards.map(({ icon, title, desc, delay }, idx) => (
-            <motion.div key={idx} initial={{ x: -50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay }}
-              className="flex items-center space-x-4 p-4 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20">
-              <div className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center">{icon}</div>
-              <div><h3 className="text-white font-medium text-lg">{title}</h3><p className="text-blue-200">{desc}</p></div>
-            </motion.div>
-          ))}
+
+        <div className="relative z-10">
+          <motion.button
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            onClick={() => setShowFeatures(!showFeatures)}
+            className="flex items-center text-blue-100 hover:text-white mb-6 transition-colors duration-200"
+          >
+            <span className="mr-2">Explore Premium Features</span>
+            <motion.span
+              animate={{ rotate: showFeatures ? 90 : 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <FaChevronRight />
+            </motion.span>
+          </motion.button>
+
+          <AnimatePresence>
+            {showFeatures && (
+              <motion.div
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: "auto", opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                transition={{ duration: 0.4 }}
+                className="overflow-hidden"
+              >
+                <div className="grid grid-cols-2 gap-4 mb-6">
+                  {premiumFeatures.map((feature, index) => (
+                    <motion.div
+                      key={index}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: index * 0.1 }}
+                      className="bg-white/10 backdrop-blur-sm p-4 rounded-xl border border-white/20"
+                    >
+                      <div className="flex items-start">
+                        <div className="mr-3 mt-1">{feature.icon}</div>
+                        <div>
+                          <h3 className="text-white font-medium">{feature.title}</h3>
+                          <p className="text-blue-200 text-sm">{feature.description}</p>
+                        </div>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.6 }}
+            className="flex items-center space-x-4"
+          >
+            <div className="w-12 h-12 rounded-full bg-blue-600 flex items-center justify-center">
+              <FaUserTie className="text-white" size={20} />
+            </div>
+            <div>
+              <p className="text-blue-200 text-sm">Trusted by 1M+ Users</p>
+              <p className="text-white font-medium">Best Experience & security</p>
+            </div>
+          </motion.div>
         </div>
       </motion.div>
 
-      {/* Login Form */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center p-8">
-        <motion.div initial={{ scale: 0.95, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ duration: 0.5 }}
-          className="max-w-md w-full space-y-8 bg-white rounded-3xl shadow-2xl p-10 border border-gray-100">
+      <div className="w-full lg:w-1/2 flex items-center justify-center p-8 relative z-10">
+        <motion.div
+          initial={{ scale: 0.95, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ duration: 0.5 }}
+          className="max-w-md w-full space-y-8 bg-white shadow-xl rounded-3xl p-12 border border-gray-200"
+        >
           <div className="text-center">
-            <motion.div whileHover={{ scale: 1.05 }}
-              className="mx-auto w-24 h-24 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 flex items-center justify-center shadow-lg mb-6">
-              <FaUserShield className="h-10 w-10 text-white" />
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              className="mx-auto w-20 h-20 rounded-full bg-gradient-to-r from-blue-500 to-indigo-500 flex items-center justify-center shadow-lg mb-6"
+            >
+              <FaLock className="h-8 w-8 text-white" />
             </motion.div>
-            <motion.h2 initial={{ y: 10, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.2 }}
-              className="text-3xl font-extrabold text-gray-900">Secure Login</motion.h2>
-            <motion.p initial={{ y: 10, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.3 }}
-              className="mt-2 text-sm text-gray-600">
-              Don't have an account? <Link to="/signup" className="font-medium text-blue-600 hover:text-blue-500">Sign in Here</Link>
+            <motion.h2
+              initial={{ y: 10, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.2 }}
+              className="text-3xl font-bold text-gray-900 mb-2"
+            >
+              Secure Login
+            </motion.h2>
+            <motion.p
+              initial={{ y: 10, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.3 }}
+              className="text-gray-600"
+            >
+              Enter your credentials to access the Dashboard
             </motion.p>
           </div>
 
           {error && (
-            <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }}
-              className="rounded-xl bg-red-50 p-4 border border-red-100">
-              <div className="flex items-center text-red-800">
-                <svg className="h-5 w-5 text-red-500 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16z..." /></svg>
+            <motion.div
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="rounded-xl bg-red-100 p-4 border border-red-300"
+            >
+              <div className="flex items-center text-red-700">
+                <svg className="h-5 w-5 text-red-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
                 <span className="text-sm font-medium">{error}</span>
               </div>
             </motion.div>
@@ -157,8 +292,7 @@ const Login = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 icon={<FaEnvelope className="h-5 w-5 text-gray-400" />}
-                placeholder="you@example.com"
-                autoComplete="email"
+                placeholder="your@example.com"
               />
               <InputField
                 id="password"
@@ -168,21 +302,28 @@ const Login = () => {
                 onChange={(e) => setPassword(e.target.value)}
                 icon={<FaLock className="h-5 w-5 text-gray-400" />}
                 placeholder="••••••••"
-                autoComplete="current-password"
-                link={{ text: "Forgot password?", href: "/forgot-password" }}
               />
             </div>
-            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }}>
+
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6 }}
+            >
               <button
                 type="submit"
                 disabled={isLoading}
                 onMouseEnter={() => setIsHovered(true)}
                 onMouseLeave={() => setIsHovered(false)}
-                className={`group relative w-full flex justify-center py-4 px-4 text-lg font-medium rounded-xl text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 shadow-lg ${isLoading ? 'opacity-90 cursor-not-allowed' : ''}`}
+                className={`group relative w-full flex justify-center py-4 px-4 text-lg font-medium rounded-xl text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 transition-all duration-300 shadow-lg ${isLoading ? "opacity-90 cursor-not-allowed" : ""
+                  }`}
               >
                 <span className="absolute left-0 inset-y-0 flex items-center pl-4">
-                  <motion.span animate={{ x: isHovered ? 5 : 0 }} transition={{ type: "spring", stiffness: 500 }}>
-                    <FiLogIn className="h-6 w-6 text-blue-300" />
+                  <motion.span
+                    animate={{ x: isHovered ? 5 : 0 }}
+                    transition={{ type: "spring", stiffness: 500 }}
+                  >
+                    <FaChevronRight className="h-5 w-5 text-blue-200 group-hover:text-white transition-colors" />
                   </motion.span>
                 </span>
                 {isLoading ? (
@@ -191,33 +332,34 @@ const Login = () => {
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                       <path className="opacity-75" fill="currentColor" d="M4 12a8..." />
                     </svg>
-                    Signing in...
+                    Authenticating...
                   </>
-                ) : 'Log in'}
+                ) : (
+                  "Log In"
+                )}
               </button>
             </motion.div>
           </form>
 
-          {/* Social Links */}
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8 }} className="pt-6 mt-6 border-t text-center">
-            <div className="flex justify-center space-x-4">
-              {[
-                { href: "https://github.com/sahilmd01", icon: <FaGithub /> },
-                { href: "https://linkedin.com/in/codewithkinu", icon: <FaLinkedin /> },
-               
-              ].map((link, i) => (
-                <motion.a key={i} whileHover={{ y: -3, scale: 1.1 }} whileTap={{ scale: 0.95 }}
-                  href={link.href} target="_blank" rel="noopener noreferrer"
-                  className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center text-gray-700 shadow-sm overflow-hidden">
-                  {link.icon}
-                </motion.a>
-              ))}
-            </div>
-            <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1 }}
-              className="mt-3 text-xs text-gray-500">Connect with me</motion.p>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.8 }}
+            className="pt-6 mt-6 border-t border-gray-200 text-center"
+          >
+            <p className="text-gray-600 text-sm">
+              New to our platform?{" "}
+              <Link
+                to="/signup"
+                className="text-blue-600 hover:text-blue-500 font-medium transition-colors"
+              >
+                Sign Up here
+              </Link>
+            </p>
           </motion.div>
         </motion.div>
       </div>
+
     </div>
   );
 };
