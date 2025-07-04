@@ -1,11 +1,31 @@
-import React from 'react'
+import React, { createContext, useState } from "react";
 
-const userContext = () => {
+export const UserContext = createContext();
+
+const UserProvider = ({ children }) => {
+  const [user, setUser] = useState(null);
+
+  //Function to update user data
+  const updateUser = (userData) => {
+    setUser(userData);
+  };
+
+  //Function to clear user data  (eg:on logout)
+  const clearUser = () => {
+    setUser(null);
+  };
+
   return (
-    <div>
-      
-    </div>
-  )
-}
+    <UserContext.Provider
+      value={{
+        user,
+        updateUser,
+        clearUser,
+      }}
+    >
+      {children}
+    </UserContext.Provider>
+  );
+};
 
-export default userContext
+export default UserProvider;
