@@ -89,11 +89,7 @@ const CustomLegend = ({ payload = [] }) => {
       </div>
 
       {/* Hide scrollbars completely via custom CSS */}
-      <style jsx>{`
-        .no-scrollbar::-webkit-scrollbar {
-          display: none;
-        }
-      `}</style>
+      <style>{}</style>
     </div>
   );
 };
