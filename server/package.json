@@ -1,5 +1,5 @@
 {
-  "name": "server",
+  "name": "expense-tracker-backend",
   "version": "1.0.0",
   "description": "",
   "main": "server.js",
@@ -13,14 +13,14 @@
   "dependencies": {
     "bcryptjs": "^3.0.2",
     "cors": "^2.8.5",
-    "dotenv": "^17.0.1",
-    "express": "^5.1.0",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
     "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.16.1",
-    "multer": "^2.0.1",
+    "mongoose": "^8.12.1",
+    "multer": "^1.4.5-lts.1",
     "xlsx": "^0.18.5"
   },
   "devDependencies": {
-    "nodemon": "^3.1.10"
+    "nodemon": "^3.1.9"
   }
 }
