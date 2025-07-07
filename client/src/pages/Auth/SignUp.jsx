@@ -352,7 +352,7 @@ const SignUp = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               icon={<FaLock className="h-5 w-5 text-gray-400" />}
-              placeholder="Minimum 8 digit character"
+              placeholder="exp: P@ssw0rd (min 8 chars)"
             />
 
             <motion.div
