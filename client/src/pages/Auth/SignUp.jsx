@@ -64,7 +64,7 @@ const InputField = ({ id, label, type, value, onChange, icon, placeholder }) => 
 );
 
 const SignUp = () => {
-  const [profilePic, setProfilePic] = useState(null);
+  // const [profilePic, setProfilePic] = useState(null);
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -105,17 +105,17 @@ const SignUp = () => {
     setError("");
 
     try {
-      let profileImageUrl = "";
-      if (profilePic) {
-        const imgUploadRes = await uploadImage(profilePic);
-        profileImageUrl = imgUploadRes.imageUrl || "";
-      }
+      // let profileImageUrl = "";
+      // if (profilePic) {
+      //   const imgUploadRes = await uploadImage(profilePic);
+      //   profileImageUrl = imgUploadRes.imageUrl || "";
+      // }
 
       const { data } = await axiosInstance.post(API_PATHS.AUTH.REGISTER, {
         fullName,
         email,
         password,
-        profileImageUrl
+        // profileImageUrl
       });
 
       if (data.token) {
@@ -288,6 +288,11 @@ const SignUp = () => {
               className="text-sm text-gray-600"
             >
               Join our premium platform today
+              <div className="mt-4 p-4 rounded-2xl bg-blue-50 border border-blue-200 text-sm text-blue-800 shadow-sm">
+                <span>
+                  <strong>Note:</strong> If registration fails, please wait a few seconds and try again. The server is hosted on Render, which may take a moment to wake up or respond due to slower deployment times. Thank you for your patience!
+                </span>
+              </div>
             </motion.p>
           </div>
 
@@ -307,7 +312,8 @@ const SignUp = () => {
           )}
 
           <form className="space-y-3" onSubmit={handleSignUp}>
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex justify-center">
+            {/* Commented out profile image section */}
+            {/* <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex justify-center">
               <div className="relative w-16 h-16 group">
                 <div className="w-full h-full rounded-full bg-gray-100 flex items-center justify-center overflow-hidden border-2 border-gray-300">
                   {profilePic ? (
@@ -323,7 +329,7 @@ const SignUp = () => {
 
             <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center text-xs text-yellow-500 mt-1 mb-1">
               Note: Profile picture and name cannot be changed later
-            </motion.p>
+            </motion.p> */}
 
             <InputField
               id="fullName"
