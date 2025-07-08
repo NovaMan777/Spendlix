@@ -290,7 +290,7 @@ const SignUp = () => {
               Join our premium platform today
               <div className="mt-4 p-4 rounded-2xl bg-blue-50 border border-blue-200 text-sm text-blue-800 shadow-sm">
                 <span>
-                  <strong>Note:</strong> If registration fails, please wait a few seconds and try again. The server is hosted on Render, which may take a moment to wake up or respond due to slower deployment times. Thank you for your patience!
+                  <strong>Note:</strong> If registration fails, please wait a few seconds <strong>Refrace</strong>and try again. The server is hosted on Render, which may take a moment to wake up or respond due to slower deployment times. Thank you for your patience!
                 </span>
               </div>
             </motion.p>

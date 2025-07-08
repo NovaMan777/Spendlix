@@ -266,6 +266,11 @@ const Login = () => {
             >
               Enter your credentials to access the Dashboard
             </motion.p>
+            <div className="mt-4 p-4 rounded-2xl bg-blue-50 border border-blue-200 text-sm text-blue-800 shadow-sm">
+              <span>
+                <strong>Note:</strong> If Login fails,refrace and try again. The server (hosted on Render) may take time to respond. Thanks!
+              </span>
+            </div>
           </div>
 
           {error && (
